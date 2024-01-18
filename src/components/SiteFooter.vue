@@ -9,10 +9,12 @@
             >
         </p>
 
-        <p>
+        <p class="middle-item">
             <a class="special-link" href="mailto:erik@mattheis.org?subject=OMG!"
                 >erik@mattheis.org</a
-            ><br />
+            >
+        </p>
+        <p>
             <a class="special-link" href="https://mattheis.org">mattheis.org</a>
         </p>
     </footer>
