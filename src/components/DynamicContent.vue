@@ -17,7 +17,7 @@
                     <p><span v-text="article.title"></span></p>
                 </div>
             </header>
-            <section class="content">
+            <section class="dynamic content">
                 <div v-html="formattedContent"></div>
             </section>
         </div>

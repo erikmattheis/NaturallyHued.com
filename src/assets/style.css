@@ -38,10 +38,7 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  background-size: cover;
-  background-repeat: no-repeat;
-  background-position: center;
+
 }
 
 .spa {
@@ -161,6 +158,10 @@ header {
 
 .content {
   padding: 0 2rem 6rem 2rem;
+}
+
+.dynamic.content {
+  padding-top: 3rem;
 }
 
 .endmark-wrapper {
