@@ -22,6 +22,19 @@
         <section class="content">
             <div class="wrapper">
                 <div class="text">
+                    <blockquote class="muted-announcement">
+                        <em
+                            >As part of a self-directed initiative, I've
+                            developed this project to learn leveraging the
+                            capabilities of OpenAI's GPT-3.5 and DALL-E 2 while
+                            exploring the world of natural dyes.<br /><br />
+                            - Erik Mattheis (<a href="mailto:erik@mattheis.org"
+                                >erik@mattheis.org</a
+                            >)</em
+                        >
+                    </blockquote>
+                </div>
+                <div class="text">
                     <p>
                         Step into the enchanting world of natural dyes, a
                         heritage passed down through generations. From the
