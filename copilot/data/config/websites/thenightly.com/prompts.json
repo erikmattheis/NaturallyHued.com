@@ -1,0 +1,15 @@
+{
+  "description": {
+    "defaultStr1": "",
+    "splitLimit": 40
+  },
+  "title": {
+    "role": "user",
+    "contentTemplate": "Three things {0} {1} {2}",
+    "arguments": [
+      "arg1",
+      "arg2",
+      "arg3"
+    ]
+  }
+}
