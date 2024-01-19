@@ -4,7 +4,6 @@
             <header
                 :style="{
                     'background-color': article.color.background,
-                    color: article.color.color,
                 }"
             >
                 <div
@@ -13,8 +12,22 @@
                     }"
                     class="title-background"
                 >
-                    <h2><span v-text="article.shortTitle"></span></h2>
-                    <p><span v-text="article.title"></span></p>
+                    <h2
+                        :style="{
+                            'background-color': `${article.color.background}aa`,
+                            color: article.color.color,
+                        }"
+                    >
+                        <span v-text="article.shortTitle"></span>
+                    </h2>
+                    <p
+                        :style="{
+                            'background-color': `${article.color.background}aa`,
+                            color: article.color.color,
+                        }"
+                    >
+                        <span v-text="article.title"></span>
+                    </p>
                 </div>
             </header>
             <section class="dynamic content">
