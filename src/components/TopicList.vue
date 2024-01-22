@@ -3,7 +3,7 @@
         <ul
             class="drawer"
             :class="{ expanded: expanded }"
-            style="max-height: 100vh; overflow: scroll"
+            style="max-height: 100vh"
         >
             <li class="special-link">
                 <router-link
@@ -29,6 +29,7 @@
                     'background-color': `${article.color.background}`,
                 }"
             >
+                <!--
                 <a
                     class="link"
                     :style="{
@@ -49,7 +50,32 @@
                             'background-color': article.color.background,
                         }"
                     ></div>
-                </a>
+
+                    {{ article.shortTitle }}
+
+                    <div
+                        class="box"
+                        :style="{
+                            'background-color': article.color.background,
+                        }"
+                    >
+                                    </a>
+                    --><router-link
+                    :to="{
+                        name: 'DynamicContent',
+                        params: { topic: article.topic },
+                    }"
+                    @touchend.passive="closeDrawerTouch()"
+                    class="link"
+                    :style="{
+                        cursor: article.isHovered ? 'pointer' : 'default',
+                        'background-color': article.isHovered
+                            ? '#ffffff66'
+                            : '#ffffffdd',
+                    }"
+                >
+                    {{ article.shortTitle }}
+                </router-link>
             </li>
         </ul>
         <div class="floating-button">
@@ -146,15 +172,6 @@ a {
     color: inherit;
     text-decoration: none;
 }
-.drawer-container {
-    ::-webkit-scrollbar {
-        display: none;
-    }
-
-    scrollbar-width: none;
-
-    -ms-overflow-style: none;
-}
 
 .floating-button {
     position: fixed;
@@ -174,16 +191,36 @@ button {
     background-color: transparent;
     cursor: pointer;
 }
+
+.nav {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: var(--button-width);
+    height: 100vh;
+    z-index: 10;
+}
+.drawer-container {
+    position: relative;
+    ::-webkit-scrollbar {
+        display: none;
+    }
+
+    scrollbar-width: none;
+
+    -ms-overflow-style: none;
+}
+
 .drawer {
     position: fixed;
     top: 0;
     left: var(--negative-total-width);
     transition: all 0.3s ease;
     height: 100%;
+    overflow-y: auto; /* Add this line */
 }
 
 .drawer.expanded {
-    position: fixed;
     top: 0;
     left: 0;
 }
@@ -206,7 +243,7 @@ ul {
 
 .link .text-content {
     flex-grow: 1 1 auto;
-    width: calc(var(--nav-width)-var(--button-width));
+    width: calc(var(--nav-width) - var(--button-width));
     height: var(--button-width);
 }
 .box {

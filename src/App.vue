@@ -8,7 +8,7 @@
             <RouterView @changeBackground="setBg"></RouterView>
             <EndMark :color="color" />
         </div>
-        <TopicList class="nav" />
+        <TopicList />
         <SiteFooter :color="color" />
     </div>
 </template>
