@@ -1,5 +1,5 @@
 <template>
-    <div class="drawer-container" @touchmove.prevent>
+    <div class="drawer-container">
         <ul
             class="drawer"
             :class="{ expanded: expanded }"
