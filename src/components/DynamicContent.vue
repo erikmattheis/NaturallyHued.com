@@ -179,7 +179,7 @@ export default {
             })
             console.log('found', this.article?.title)
             if (!this.article) {
-                this.$router.push({ name: 'Home' })
+                this.$router.push({ name: 'HomePage' })
                 return
             }
             this.article.title = DOMPurify.sanitize(this.article.title)
