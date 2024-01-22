@@ -136,7 +136,9 @@ export default {
         })
     },
     beforeUnmount() {
-        window.removeEventListener('mousemove', this.handleMouseMove)
+        window.removeEventListener('mousemove', this.handleMouseMove, {
+            passive: true,
+        })
     },
     methods: {
         navigateTo(shortTitle) {
@@ -150,17 +152,26 @@ export default {
             this.isHovered = true
         },
         handleMouseMove(event) {
+            if (
+                event.sourceCapabilities &&
+                event.sourceCapabilities.firesTouchEvents
+            ) {
+                return
+            }
             if (event.clientX < 100 && !this.expanded) {
+                console.log('expanded handleMouseMove true')
                 this.expanded = true
             } else if (event.clientX > 240 && this.expanded) {
+                console.log('expanded handleMouseMove false')
                 this.expanded = false
             }
         },
         toggleDrawer() {
+            console.log('expanded toggleDrawer opposite', !this.expanded)
             this.expanded = !this.expanded
         },
         closeDrawerTouch() {
-            console.log('closeDrawerTouch', this.expanded)
+            console.log('expanded closeDrawerTouch false')
             this.expanded = false
         },
     },
