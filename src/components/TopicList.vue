@@ -30,7 +30,6 @@
                 }"
             >
                 <a
-                    :href="`/dyes/${article.shortTitle}`"
                     class="link"
                     :style="{
                         cursor: article.isHovered ? 'pointer' : 'default',
@@ -38,12 +37,6 @@
                             ? '#ffffff66'
                             : '#ffffffdd',
                     }"
-                    @click.prevent="
-                        $router.push({
-                            name: 'DynamicContent',
-                            params: { topic: article.topic },
-                        })
-                    "
                     @touchend.passive="closeAndNavigate(article.shortTitle)"
                     @mouseover="article.isHovered = true"
                     @mouseout="article.isHovered = false"
@@ -120,7 +113,6 @@ export default {
     },
     methods: {
         closeAndNavigate(shortTitle) {
-            this.expanded = false
             this.$router.push({
                 name: 'DynamicContent',
                 params: { topic: shortTitle },
@@ -169,7 +161,7 @@ a {
     top: 1rem;
     left: 1rem;
     width: var(--button-width);
-    height: ar(--button-width);
+    height: var(--button-width);
     border-radius: 100rem;
     background-color: var(--text-background-color);
     color: var(--text-color);
