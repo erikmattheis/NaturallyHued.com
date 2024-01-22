@@ -32,6 +32,14 @@
             </header>
             <section class="dynamic content">
                 <div v-html="formattedContent"></div>
+                <div v-if="isImageExpanded" class="expanded-image-container">
+                    <img
+                        :src="article.image.compressed"
+                        alt="Expanded Image"
+                        class="expanded-image"
+                    />
+                    <button @click="isImageExpanded = false">Close</button>
+                </div>
             </section>
         </div>
     </article>
@@ -67,6 +75,7 @@ export default {
             },
             originalArticle: {},
             isLoading: false,
+            isImageExpanded: false,
         }
     },
     created() {
@@ -74,7 +83,7 @@ export default {
     },
     computed: {
         formattedContent() {
-            const img = `<img src="${this.article.image.compressed}" alt="${this.article.shortTitle}" class="article-image" />`
+            const img = `<img src="${this.article.image.compressed}" alt="${this.article.shortTitle}" class="article-image" @click="isImageExpanded = true" />`
 
             const paragraphs = this.article.content.split('</h2>')
             paragraphs.splice(1, 0, img)
@@ -168,7 +177,11 @@ export default {
             this.article = this.articles.find((article) => {
                 return article.topic === topic
             })
-            console.log('found', this.article.title)
+            console.log('found', this.article?.title)
+            if (!this.article) {
+                this.$router.push({ name: 'Home' })
+                return
+            }
             this.article.title = DOMPurify.sanitize(this.article.title)
             this.article.content = DOMPurify.sanitize(this.article.content)
             this.article = this.addColorObject(this.article)
@@ -256,3 +269,23 @@ export default {
     },
 }
 </script>
+
+<style scoped>
+.expanded-image-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.expanded-image {
+    max-width: 100%;
+    max-height: 100%;
+}
+</style>

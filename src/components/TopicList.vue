@@ -44,13 +44,7 @@
                             params: { topic: article.topic },
                         })
                     "
-                    @touchstart.passive="
-                        $router.push({
-                            name: 'DynamicContent',
-                            params: { topic: article.shortTitle },
-                        })
-                    "
-                    @touchend.passive="closeDrawerTouch()"
+                    @touchend.passive="closeAndNavigate(article.shortTitle)"
                     @mouseover="article.isHovered = true"
                     @mouseout="article.isHovered = false"
                 >
@@ -125,6 +119,14 @@ export default {
         window.removeEventListener('mousemove', this.handleMouseMove)
     },
     methods: {
+        closeAndNavigate(shortTitle) {
+            this.expanded = false
+            this.$router.push({
+                name: 'DynamicContent',
+                params: { topic: shortTitle },
+            })
+            closeDrawerTouch()
+        },
         mouseOver(event) {
             event.target.style.color = event.target.style.backgroundColor
             this.isHovered = true
@@ -137,7 +139,6 @@ export default {
             }
         },
         toggleDrawer() {
-            console.log('toggleDrawer', this.expanded)
             this.expanded = !this.expanded
         },
         closeDrawerTouch() {
