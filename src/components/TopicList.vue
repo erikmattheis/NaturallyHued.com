@@ -30,7 +30,6 @@
                 }"
             >
                 <a
-                    :href="`/dyes/${article.topic}`"
                     class="link"
                     :style="{
                         cursor: article.isHovered ? 'pointer' : 'default',
@@ -38,6 +37,7 @@
                             ? '#ffffff66'
                             : '#ffffffdd',
                     }"
+                    @touchstart.passive="navigateTo(article.topic)"
                     @touchend.passive="closeDrawerTouch()"
                     @mouseover="article.isHovered = true"
                     @mouseout="article.isHovered = false"
@@ -113,12 +113,11 @@ export default {
         window.removeEventListener('mousemove', this.handleMouseMove)
     },
     methods: {
-        closeAndNavigate(shortTitle) {
+        navigateTo(shortTitle) {
             this.$router.push({
                 name: 'DynamicContent',
                 params: { topic: shortTitle },
             })
-            closeDrawerTouch()
         },
         mouseOver(event) {
             event.target.style.color = event.target.style.backgroundColor
