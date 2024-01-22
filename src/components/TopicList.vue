@@ -4,7 +4,6 @@
             class="drawer"
             :class="{ expanded: expanded }"
             style="max-height: 100vh; overflow: scroll"
-            @touchmove.prevent
         >
             <li class="special-link">
                 <router-link
