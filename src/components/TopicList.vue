@@ -37,7 +37,7 @@
                             ? '#ffffff66'
                             : '#ffffffdd',
                     }"
-                    @touchend.passive="closeAndNavigate(article.shortTitle)"
+                    @touchend.passive="closeAndNavigate(article.topic)"
                     @mouseover="article.isHovered = true"
                     @mouseout="article.isHovered = false"
                 >
@@ -112,12 +112,12 @@ export default {
         window.removeEventListener('mousemove', this.handleMouseMove)
     },
     methods: {
-        closeAndNavigate(shortTitle) {
+        closeAndNavigate(topic) {
             this.$router.push({
                 name: 'DynamicContent',
-                params: { topic: shortTitle },
+                params: { topic: topic },
             })
-            closeDrawerTouch()
+            this.closeDrawerTouch()
         },
         mouseOver(event) {
             event.target.style.color = event.target.style.backgroundColor
