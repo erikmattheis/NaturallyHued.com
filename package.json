@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "description": "Generates rough drafts of articles from configuration files. Like a glorified lorem ipsum. For demonstratation, it makes a static website about natural dyes and fibers. The next step would be to allow a human to edit the rough draft, giving it back to the AI for further refinement if desired.",
   "scripts": {
-    "dev": "vite",
+    "dev": "vite --host",
     "build": "vite build",
     "start": "vite",
     "format": "prettier-eslint \"src/**/*.js\""

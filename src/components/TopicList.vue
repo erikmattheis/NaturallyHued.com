@@ -1,19 +1,21 @@
 <template>
     <div class="drawer-container">
-        <ul
-            class="drawer"
-            :class="{ expanded: expanded }"
-            style="max-height: 100vh"
-        >
-            <li class="special-link">
+        <ul class="drawer" :class="{ expanded: expanded }">
+            <li>
                 <router-link
                     @touchend.passive="closeDrawerTouch()"
                     to="/"
                     class="link"
                     >Home</router-link
                 >
+                <div
+                    class="box"
+                    :style="{
+                        'background-color': '#ffffff',
+                    }"
+                ></div>
             </li>
-            <li class="special-link">
+            <li class="link special-link">
                 <router-link
                     @touchend.passive="closeDrawerTouch()"
                     to="/about"
@@ -29,17 +31,15 @@
                     'background-color': `${article.color.background}`,
                 }"
             >
-                <!--
                 <a
-                    class="link"
-                    :style="{
-                        cursor: article.isHovered ? 'pointer' : 'default',
-                        'background-color': article.isHovered
-                            ? '#ffffff66'
-                            : '#ffffffdd',
-                    }"
-                    @touchstart.passive="navigateTo(article.topic)"
-                    @touchend.passive="closeDrawerTouch()"
+                    :href="`/dyes/${article.shortTitle}`"
+                    @click.prevent="
+                        $router.push({
+                            name: 'DynamicContent',
+                            params: { topic: article.topic },
+                        })
+                    "
+                    @touchend.passive="closeAndNavigate(article.shortTitle)"
                     @mouseover="article.isHovered = true"
                     @mouseout="article.isHovered = false"
                 >
@@ -50,40 +50,11 @@
                             'background-color': article.color.background,
                         }"
                     ></div>
-
-                    {{ article.shortTitle }}
-
-                    <div
-                        class="box"
-                        :style="{
-                            'background-color': article.color.background,
-                        }"
-                    >
-                                    </a>
-                    --><router-link
-                    :to="{
-                        name: 'DynamicContent',
-                        params: { topic: article.topic },
-                    }"
-                    @touchend.passive="closeDrawerTouch()"
-                    class="link"
-                    :style="{
-                        cursor: article.isHovered ? 'pointer' : 'default',
-                        'background-color': article.isHovered
-                            ? '#ffffff66'
-                            : '#ffffffdd',
-                    }"
-                >
-                    {{ article.shortTitle }}
-                </router-link>
+                </a>
             </li>
         </ul>
         <div class="floating-button">
-            <button
-                @touchstart.passive="toggleDrawer()"
-                class="top-control"
-                style="padding: 0.4rem"
-            >
+            <button @touchstart.passive="toggleDrawer()" class="top-control">
                 <svg
                     aria-hidden="true"
                     viewBox="165.943 60.0498 135.385 125.1675"
@@ -136,42 +107,33 @@ export default {
         })
     },
     beforeUnmount() {
-        window.removeEventListener('mousemove', this.handleMouseMove, {
-            passive: true,
-        })
+        window.removeEventListener('mousemove', this.handleMouseMove)
     },
     methods: {
-        navigateTo(shortTitle) {
+        closeAndNavigate(shortTitle) {
+            this.expanded = true
             this.$router.push({
                 name: 'DynamicContent',
                 params: { topic: shortTitle },
             })
+            closeDrawerTouch()
         },
         mouseOver(event) {
             event.target.style.color = event.target.style.backgroundColor
             this.isHovered = true
         },
         handleMouseMove(event) {
-            if (
-                event.sourceCapabilities &&
-                event.sourceCapabilities.firesTouchEvents
-            ) {
-                return
-            }
             if (event.clientX < 100 && !this.expanded) {
-                console.log('expanded handleMouseMove true')
                 this.expanded = true
             } else if (event.clientX > 240 && this.expanded) {
-                console.log('expanded handleMouseMove false')
                 this.expanded = false
             }
         },
         toggleDrawer() {
-            console.log('expanded toggleDrawer opposite', !this.expanded)
             this.expanded = !this.expanded
         },
         closeDrawerTouch() {
-            console.log('expanded closeDrawerTouch false')
+            console.log('closeDrawerTouch', this.expanded)
             this.expanded = false
         },
     },
@@ -183,13 +145,23 @@ a {
     color: inherit;
     text-decoration: none;
 }
+.drawer-container {
+    ::-webkit-scrollbar {
+        display: none;
+    }
+
+    scrollbar-width: none;
+
+    -ms-overflow-style: none;
+    border: 1px solid red !important;
+}
 
 .floating-button {
     position: fixed;
     top: 1rem;
     left: 1rem;
     width: var(--button-width);
-    height: var(--button-width);
+    height: ar(--button-width);
     border-radius: 100rem;
     background-color: var(--text-background-color);
     color: var(--text-color);
@@ -202,36 +174,17 @@ button {
     background-color: transparent;
     cursor: pointer;
 }
-
-.nav {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: var(--button-width);
-    height: 100vh;
-    z-index: 10;
-}
-.drawer-container {
-    position: relative;
-    ::-webkit-scrollbar {
-        display: none;
-    }
-
-    scrollbar-width: none;
-
-    -ms-overflow-style: none;
-}
-
 .drawer {
     position: fixed;
     top: 0;
     left: var(--negative-total-width);
     transition: all 0.3s ease;
     height: 100%;
-    overflow-y: auto; /* Add this line */
+    overflow: scroll-y;
 }
 
 .drawer.expanded {
+    position: fixed;
     top: 0;
     left: 0;
 }
@@ -245,48 +198,33 @@ ul {
 .link {
     position: relative;
     display: block;
-    width: calc(var(--nav-width) - 2rem);
+    width: calc(var(--nav-width) - 1rem);
     line-height: 1.5;
     transition: all 0.3s ease;
     text-decoration: none;
-    padding: 0.5rem 0.5rem;
+    padding: 0 0.5rem;
+    background-color: '#fffffff';
 }
 
-.link .text-content {
-    flex-grow: 1 1 auto;
-    width: calc(var(--nav-width) - var(--button-width));
-    height: var(--button-width);
+.special-link {
+    text-align: right;
 }
-.box {
-    position: absolute;
-    width: 1rem;
-    height: var(--button-width);
-    right: 0;
-    top: 0;
-    z-index: 100000;
-}
-
-.link:hover {
-    cursor: pointer;
-}
-
-.special-link,
 .special-link a,
 .special-link a:link {
-    text-align: right;
-    margin-right: -1.5rem;
-    padding-right: 1.5rem;
     background-color: var(--text-background-color);
     color: var(--text-color);
-}
-
-.special-link:hover {
-    color: var(--text-background-color);
-    background-color: var(--text-color);
 }
 
 .special-link a:hover {
     color: var(--text-background-color);
     background-color: var(--text-color);
+}
+
+.box {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 1rem;
+    height: 100%;
 }
 </style>

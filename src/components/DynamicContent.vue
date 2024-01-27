@@ -1,5 +1,5 @@
 <template>
-    <article class="wrapper" @touchmove.prevent>
+    <article class="wrapper">
         <div v-if="article">
             <header
                 :style="{
