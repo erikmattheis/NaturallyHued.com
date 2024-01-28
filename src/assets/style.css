@@ -128,7 +128,7 @@ blockquote p {
 .article-image {
   width: 40%;
   float: right;
-  margin: 1rem -1.5rem 1rem 1rem;
+  margin: 1rem 0 1rem 1rem;
 }
 
 .image-container {
@@ -235,6 +235,14 @@ footer a:hover {
   .content {
     padding: 0 2rem 6rem 2rem;
   }
+
+  .article-image {
+    width: 40%;
+    float: right;
+    margin: 1rem -1.5rem 1rem 1rem;
+  }
+
+
 
   blockquote {
     margin: 0 0 0 -2rem;

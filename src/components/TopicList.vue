@@ -1,17 +1,23 @@
 <template>
     <div class="drawer-container" @touchmove.prevent>
         <ul class="drawer" :class="{ expanded: expanded }">
-            <li>
-                <router-link to="/" class="link">Home</router-link>
-                <div
-                    class="box"
-                    :style="{
-                        'background-color': '#ffffff',
-                    }"
-                ></div>
+            <li class="white-link">
+                <router-link
+                    to="/"
+                    class="link right"
+                    @touchend="closeDrawerTouch()"
+                    >Home
+                    <div class="black box"></div
+                ></router-link>
             </li>
-            <li class="link special-link">
-                <router-link to="/about" class="link"> About </router-link>
+            <li class="white-link">
+                <router-link
+                    to="/about"
+                    class="link right"
+                    @touchend="closeDrawerTouch()"
+                    >About
+                    <div class="black box"></div
+                ></router-link>
             </li>
             <li
                 v-for="article in topics"
@@ -21,9 +27,9 @@
                 }"
             >
                 <router-link
-                    @touchend="closeDrawerTouch()"
                     class="link"
                     :to="`/dyes/${article.shortTitle}`"
+                    @touchend="closeDrawerTouch()"
                 >
                     {{ article.shortTitle }}
                     <div
@@ -35,6 +41,7 @@
                 </router-link>
             </li>
         </ul>
+
         <div class="floating-button">
             <button @touchstart.passive="toggleDrawer()" class="top-control">
                 <svg
@@ -143,10 +150,11 @@ a {
 
 .floating-button {
     position: fixed;
-    top: 1rem;
+    top: 0.5rem;
     left: 1rem;
     width: var(--button-width);
-    height: ar(--button-width);
+    height: var(--button-width);
+    padding: 0.31rem;
     border-radius: 100rem;
     background-color: var(--text-background-color);
     color: var(--text-color);
@@ -184,15 +192,27 @@ ul {
     position: relative;
     display: block;
     width: calc(var(--nav-width) - 1rem);
-    line-height: 1.5;
-    transition: all 0.3s ease;
     text-decoration: none;
     padding: 0 0.5rem;
-    background-color: '#ffffff44' !important;
+    background-color: #ffffff44;
+    color: #000;
+    transition: all 0.3s ease;
+}
+
+.link.right {
+    text-align: right;
+    width: calc(var(--nav-width) - 2.5rem);
+    padding-right: 2rem;
 }
 
 .link:hover {
     background-color: #ffffff99;
+    color: #fff;
+}
+.white-link {
+    background-color: var(--text-background-color);
+    color: #000000;
+    text-align: right;
 }
 
 .special-link {
@@ -205,8 +225,8 @@ ul {
 }
 
 .special-link a:hover {
-    color: var(--text-background-color);
     background-color: var(--text-color);
+    color: var(--text-background-color);
 }
 .box {
     position: absolute;
@@ -214,5 +234,9 @@ ul {
     right: 0;
     width: 1rem;
     height: 100%;
+}
+
+.box.black {
+    background-color: #000;
 }
 </style>
