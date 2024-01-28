@@ -1,13 +1,8 @@
 <template>
-    <div class="drawer-container">
+    <div class="drawer-container" @touchmove.prevent>
         <ul class="drawer" :class="{ expanded: expanded }">
             <li>
-                <router-link
-                    @touchend.passive="closeDrawerTouch()"
-                    to="/"
-                    class="link"
-                    >Home</router-link
-                >
+                <router-link to="/" class="link">Home</router-link>
                 <div
                     class="box"
                     :style="{
@@ -16,13 +11,7 @@
                 ></div>
             </li>
             <li class="link special-link">
-                <router-link
-                    @touchend.passive="closeDrawerTouch()"
-                    to="/about"
-                    class="link"
-                >
-                    About
-                </router-link>
+                <router-link to="/about" class="link"> About </router-link>
             </li>
             <li
                 v-for="article in topics"
@@ -31,17 +20,10 @@
                     'background-color': `${article.color.background}`,
                 }"
             >
-                <a
-                    :href="`/dyes/${article.shortTitle}`"
-                    @click.prevent="
-                        $router.push({
-                            name: 'DynamicContent',
-                            params: { topic: article.topic },
-                        })
-                    "
-                    @touchend.passive="closeAndNavigate(article.shortTitle)"
-                    @mouseover="article.isHovered = true"
-                    @mouseout="article.isHovered = false"
+                <router-link
+                    @touchend="closeDrawerTouch()"
+                    class="link"
+                    :to="`/dyes/${article.shortTitle}`"
                 >
                     {{ article.shortTitle }}
                     <div
@@ -50,7 +32,7 @@
                             'background-color': article.color.background,
                         }"
                     ></div>
-                </a>
+                </router-link>
             </li>
         </ul>
         <div class="floating-button">
@@ -82,6 +64,9 @@
 </template>
 
 <script>
+/*      @touchend.passive="closeDrawerTouch()"
+                    @touchend.passive="closeAndNavigate(article.shortTitle)"
+                    @touchend.passive="closeDrawerTouch()" */
 import dyes from '../data/dyes.json'
 import { contrastingColor } from '../services/colors.js'
 
@@ -203,7 +188,11 @@ ul {
     transition: all 0.3s ease;
     text-decoration: none;
     padding: 0 0.5rem;
-    background-color: '#fffffff';
+    background-color: '#ffffff44' !important;
+}
+
+.link:hover {
+    background-color: #ffffff99;
 }
 
 .special-link {
@@ -219,7 +208,6 @@ ul {
     color: var(--text-background-color);
     background-color: var(--text-color);
 }
-
 .box {
     position: absolute;
     top: 0;
