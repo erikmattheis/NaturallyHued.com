@@ -1,5 +1,5 @@
 <template>
-    <div class="drawer-container" @touchmove.prevent>
+    <div class="drawer-container">
         <ul class="drawer" :class="{ expanded: expanded }">
             <li class="white-link">
                 <router-link
@@ -138,14 +138,17 @@ a {
     text-decoration: none;
 }
 .drawer-container {
-    ::-webkit-scrollbar {
-        display: none;
-    }
+    max-height: 100vh;
+    overflow-y: scroll; /* Changed from auto to scroll */
+    -webkit-overflow-scrolling: touch; /* Enable smooth scrolling on iOS devices */
 
-    scrollbar-width: none;
+    /* Override global styles */
+    scrollbar-width: thin;
+    -ms-overflow-style: auto;
+}
 
-    -ms-overflow-style: none;
-    border: 1px solid red !important;
+.drawer-container::-webkit-scrollbar {
+    display: initial;
 }
 
 .floating-button {
@@ -173,7 +176,14 @@ button {
     left: var(--negative-total-width);
     transition: all 0.3s ease;
     height: 100%;
-    overflow: scroll-y;
+    overflow-y: scroll;
+
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.drawer::-webkit-scrollbar {
+    display: none;
 }
 
 .drawer.expanded {
