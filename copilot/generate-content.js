@@ -43,7 +43,7 @@ function getALength(assignedWords) {
         finalWordCount > assignedWords * 1.5
     )
     // add plus or minus 20
-    finalWordCount += Math.floor(Math.random() * 40) - 20
+    finalWordCount += Math.floor(Math.random() * 50) - 20
     return finalWordCount
 }
 
@@ -99,15 +99,15 @@ async function generateArticles() {
                     'mullein',
                     'myrobalan',
                     'coffee',
-                    'brazil',
-                    'grsape',
-                    'mullberry',
-                    'dandilion',
-                    'beet',
-                    'avocado',
+                    'brazilwood',
+                    'grapes',
+                    'mulberries',
+                    'dandelion',
+                    'beets',
+                    'avocado pits',
                     'alkanet',
-                    'avocadp',
-                    'blueberr',
+                    'avocado pits',
+                    'blueberries',
                 ].includes(topic.name.toLowerCase())
             ) {
                 console.log(`Skipping ${topic.name}...`)
