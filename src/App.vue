@@ -1,6 +1,7 @@
 <!-- src/App.vue -->
 <template>
     <div class="dynamic" :style="{ 'background-image': backgroundImage }">
+        <button @click="toggleDrawer">Toggle Drawer</button>
         <div class="headline" v-if="!showHeadline">
             <h1>NATURALLY HUED</h1>
         </div>
@@ -8,7 +9,8 @@
             <RouterView @changeBackground="setBg"></RouterView>
             <EndMark :color="color" />
         </div>
-        <TopicList />
+
+        <TopicList :isOpen="isDrawerOpen" @close="toggleDrawer" />
         <SiteFooter :color="color" />
     </div>
 </template>
@@ -24,6 +26,7 @@ export default {
     data() {
         return {
             isLoading: true,
+            isDrawerOpen: false,
             color: {
                 color: '#FFFFFF',
                 background: '#000000',
@@ -41,6 +44,9 @@ export default {
         this.isLoading = false
     },
     methods: {
+        toggleDrawer() {
+            this.isDrawerOpen = !this.isDrawerOpen
+        },
         setBg(obj) {
             this.setWrapperBackgroundImage(obj.url)
             this.setFooterBackgroundColor(obj)
