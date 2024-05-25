@@ -3,7 +3,7 @@ const path = require('path')
 const OpenAI = require('openai')
 const sharp = require('sharp')
 
-const { saveImage } = require('./google-cloud')
+//const { saveImage } = require('./google-cloud')
 
 const openai = new OpenAI({
     apiKey: process.env.OPENAI_API_KEY,

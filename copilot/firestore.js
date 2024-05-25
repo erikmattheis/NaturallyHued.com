@@ -33,7 +33,7 @@ async function saveArticle(collection, doc, id = null) {
 
         const docRef = db.collection(collection).doc(docId)
         const timestamp = admin.firestore.Timestamp.now()
-        const sav = await docRef.set({ ...doc, timestamp })
+        await docRef.set({ ...doc, timestamp })
 
         const result = await docRef.get()
         return result.data()
@@ -48,14 +48,14 @@ async function updateArticle(collection, doc, id = null) {
         // Add a new document with a generated id to the 'messages' collection
         let docId
         if (id) {
-            docId = dod.id
+            docId = doc.id
         } else {
             docId = sanitizeId(`${doc.batch}-${doc.input.topic}`)
         }
 
         const docRef = db.collection(collection).doc(docId)
         const timestamp = admin.firestore.Timestamp.now()
-        const sav = await docRef.update({ ...doc, timestamp })
+        await docRef.update({ ...doc, timestamp })
 
         const result = await docRef.get()
         console.log('result', result.data())
@@ -86,7 +86,6 @@ async function getArticlesByCollectionAndBatch(collection, batches) {
         .filter((doc) => batches.includes(doc.data().batch))
         .map((doc) => {
             const data = doc.data()
-            console.log('data', data)
             return {
                 title: data.title,
                 shortTitle: data.shortTitle,
@@ -99,6 +98,53 @@ async function getArticlesByCollectionAndBatch(collection, batches) {
         })
     console.log('articles found ', articles.length)
     return articles
+}
+
+// select all but the document with the most recent timestamp for each topic
+async function getLatestArticles(collection) {
+    const articlesRef = db.collection(collection)
+    const snapshot = await articlesRef.get()
+    const articles = snapshot.docs.map((doc) => doc.data())
+    const latestArticles = articles.reduce((acc, article) => {
+        const existing = acc.find((a) => a.topic === article.topic)
+        if (!existing) {
+            acc.push(article)
+        } else if (article.timestamp > existing.timestamp) {
+            acc.splice(acc.indexOf(existing), 1, article)
+        }
+        return acc
+    }, [])
+    return latestArticles
+}
+
+// delete articles not in getLatestArticles
+
+async function deleteOldArticles(collection) {
+    const articlesRef = db.collection(collection)
+    const snapshot = await articlesRef.get()
+
+    const latestArticles = await getLatestArticles(collection)
+
+    const articlesToDelete = snapshot.docs.filter(
+        (doc) => !latestArticles.find((a) => a.topic === doc.data().topic)
+    )
+
+    console.log('Articles to delete:', articlesToDelete.length)
+    const deletePromises = articlesToDelete.map((doc) => doc.ref.delete())
+    return Promise.all(deletePromises)
+}
+
+async function moveArticlesToBackup(collection) {
+    console.log('Moving all docs to backup...')
+    const docRef = db.collection(collection)
+    const snapshot = await docRef.get()
+    const backupRef = db.collection('backup')
+    let backupData = []
+    snapshot.forEach((doc) => {
+        const data = doc.data()
+        backupData.push(backupRef.doc().set(data))
+    })
+    return Promise.all(backupData)
 }
 
 async function handler(request) {
@@ -116,4 +162,7 @@ module.exports = {
     saveArticle,
     getArticlesByCollection,
     getArticlesByCollectionAndBatch,
+    moveArticlesToBackup,
+    deleteOldArticles,
+    getLatestArticles,
 }

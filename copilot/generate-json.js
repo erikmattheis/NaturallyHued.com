@@ -1,21 +1,11 @@
 // functions/generatecontent-background.js
-// eslint-disable-next-line import/no-import-module-exports, import/named
 
 const { performance } = require('perf_hooks')
 const fs = require('fs')
 const path = require('path')
-const {
-    getArticlesByCollection,
-    getArticlesByCollectionAndBatch,
-} = require('./firestore')
+const { getArticlesByCollectionAndBatch } = require('./firestore')
 
 const batches = ['23.12.22', '23.12.26', '23.12.27']
-
-function getJSONFromFile(filePath) {
-    // eslint-disable-line no-unused-vars
-    const json = fs.readFileSync(filePath, 'utf8')
-    return JSON.parse(json)
-}
 
 function executionTimeToSeconds(executionTime) {
     return Math.round((executionTime / 1000) * 100) / 100

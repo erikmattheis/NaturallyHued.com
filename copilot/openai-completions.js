@@ -3,7 +3,7 @@ const OpenAI = require('openai')
 const openai = new OpenAI({
     apiKey: process.env.OPENAI_API_KEY,
 })
-const model = 'gpt-3.5-turbo'
+const model = 'gpt-4o'
 
 const jsdom = require('jsdom')
 const { JSDOM } = jsdom
@@ -16,16 +16,29 @@ function getMessage(response) {
     return response.choices[0].message.content.trim()
 }
 
+const suffixes = [
+    'Include its history, uses, and properties. Include practical tips and instructions for using Alkanet as a dye.',
+    'Cite sources and offer additional reading links.',
+    'Include its history, uses, and properties. Include practical tips and instructions for using Alkanet as a dye. Cite sources and offer additional reading links',
+]
+
+// choose a random suffix
+const suffix = suffixes[Math.floor(Math.random() * suffixes.length)]
+
 function makeContentMessages(topic, grade, len) {
+    const longerOrNot =
+        Math.random() > 0.5
+            ? 'Stay under the word limit.'
+            : 'You may go significantly over the word limit to make it a better article.'
     const messages = [
         {
             role: 'system',
             content:
-                "You are a non-fiction 1970s gonzo journalist, you include many alliterations and puns but don't say any of that. Provide an article without commentary. You write for a website.",
+                "You are an expert writer on natural dyes and fabrics with a clever, happy-go-lucky style of gonzo journalism, but don't reference this. Provide a magazine article without commentary. Format with HTML in <html><body>: p, em, aside, blockquote, strong, and h2. No attributes or css.  Place the funniest pullquote in blockquote or the funniest longer excerpt in an aside.",
         },
         {
             role: 'user',
-            content: `${len}-word humor article on natural dye ${topic}, ${grade} reading level. One of many articles on dyes. Format only with HTML tags: p, em, aside, blockquote, strong, and h2. No attributes or css. Use blockquote or aside once or twice evey 400 words."`,
+            content: `${len}-word article on natural dye ${topic}, ${grade}. One of many articles on dyes. ${suffix}. ${longerOrNot}`,
         },
     ]
     return messages

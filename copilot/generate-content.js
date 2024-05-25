@@ -4,19 +4,17 @@ const { saveArticle } = require('./firestore')
 const { generateGraphics } = require('./openai-images')
 const { generateText } = require('./openai-completions')
 
-const generateJson = require('./generate-json')
+//const generateJson = require('./generate-json')
 const { dyes } = require('./data/dyes')
 
 // const dyes = JSON.parse(dyesJson);
 
 function getAGrade() {
     const grades = [
-        '3rd grade',
-        '6th grade',
-        '12th grade',
-        'college',
-        'post-doctorate',
-        'nutty professor',
+        "Write in the voice of a rural person who has never seen a compter and doesn't trust or understand science. But do NOT include misspellings, steretyoes and especially not scientifically inaccurate information.",
+        'Use flowery lavoicnguage, poetry, illiteration, pretentious foreign-language phrases, and a penchant for the absurd.',
+        'Write at tioa post-doct orate reading level.',
+        'Make it nutty professor reading level.',
     ]
     return grades[Math.floor(Math.random() * grades.length)]
 }
@@ -67,13 +65,10 @@ function addDateSuffix(str) {
 // eslint-disable-next-line func-names
 async function generateArticles() {
     try {
-        const batch = '23.12.27'
-        const x = 11110
+        const batch = '24.05.24'
 
         const topics = dyes
 
-        // skip first 20 members
-        topics.splice(0, 54)
         // only use first few topics for now
         topics.length = 10
 
@@ -94,11 +89,33 @@ async function generateArticles() {
             },
         ]
 
-        // eslint-disable-next-line no-restricted-syntax
         for (const topic of topics) {
+            if (
+                [
+                    'guava',
+                    'cherries',
+                    'paprika',
+                    'logwood',
+                    'mullein',
+                    'myrobalan',
+                    'coffee',
+                    'brazil',
+                    'grsape',
+                    'mullberry',
+                    'dandilion',
+                    'beet',
+                    'avocado',
+                    'alkanet',
+                    'avocadp',
+                    'blueberr',
+                ].includes(topic.name.toLowerCase())
+            ) {
+                console.log(`Skipping ${topic.name}...`)
+                continue
+            }
             const start = performance.now()
 
-            const name = addDateSuffix(topic.name.toLowerCase())
+            const name = topic.name.toLowerCase()
 
             const id = sanitizeId(`${batch}-${name}`)
 
@@ -113,12 +130,13 @@ async function generateArticles() {
                     : colorTheme.colors[0] // eslint-disable-line max-len
 
             // eslint-disable-next-line no-await-in-loop
+            /*
             const image = await generateGraphics(
                 topic,
                 colorThemeDescription,
                 id
             )
-
+*/
             const temperature = Math.random() + 0.3
 
             const grade = getAGrade()
@@ -134,23 +152,21 @@ async function generateArticles() {
                 temperature
             )
             const end = performance.now()
-            const executionTime = `${executionTimeToSeconds(
-                end - start
-            )} seconds`
+            const t = end - start
+            const executionTime = `${executionTimeToSeconds(t)} seconds`
 
             console.log(`Execution time: ${executionTime}`)
             // const image = 'none';
             // JSON.stringify({ ...response, executionTime, topic: topic.name }, null, 2);
             const doc = {
                 ...response,
-                image,
                 executionTime,
                 topic: topic.name,
                 batch,
             }
 
             // eslint-disable-next-line no-await-in-loop
-            await saveArticle('dyes', doc, id)
+            await saveArticle('dyes-dev', doc, id)
         }
     } catch (error) {
         console.log('error', error)
