@@ -103,8 +103,7 @@
                         Begin your exploration into the traditions and cultures
                         woven into natural dyes and fabrics. Choose a topic from
                         the drawer on there left to dive into the world of
-                        natural hues. Or start with
-                        <a href @click.prevent="randomRoute">our suggestion</a>.
+                        natural hues.
                     </p>
                 </div>
             </div>
