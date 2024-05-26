@@ -1,7 +1,11 @@
 <template>
     <div class="dynamic" :style="{ 'background-image': backgroundImage }">
         <div class="floating-button" style="z-index: 9999">
-            <button @touchstart.passive="toggleDrawer" class="top-control">
+            <button
+                @touchstart.passive="toggleDrawer"
+                @click="toggleDrawer"
+                class="top-control"
+            >
                 <svg
                     aria-hidden="true"
                     viewBox="165.943 60.0498 135.385 125.1675"
@@ -22,7 +26,7 @@
                         style="fill: rgb(0, 121, 191)"
                     />
                 </svg>
-                <span class="sr-only">Menu</span>is:{{ isOpen }}
+                <span class="sr-only">Menu</span>
             </button>
         </div>
         <transition name="drawer">
@@ -100,7 +104,6 @@ export default {
     border-radius: 100rem;
     background-color: var(--text-background-color);
     color: var(--text-color);
-    z-index: 100;
 }
 
 button {
@@ -112,14 +115,14 @@ button {
 }
 .drawer-enter-active,
 .drawer-leave-active {
-    transition: transform 0.3s ease;
+    transition: transform all 0.3s ease;
 }
 
 .drawer-enter {
-    transform: translateX(-100%);
+    transform: translateX(-70%);
 }
 
 .drawer-leave-to {
-    transform: translateX(-100%);
+    transform: translateX(0);
 }
 </style>

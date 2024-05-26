@@ -1,8 +1,7 @@
 <template>
     <div class="drawer-container">
         <div class="drawer">
-            <button @click="close">Close</button>
-            <ul>
+            <ul class="drawer">
                 <li class="white-link">
                     <router-link
                         to="/"
@@ -25,7 +24,7 @@
                     v-for="article in topics"
                     :key="article.shortTitle"
                     :style="{
-                        'background-color': `${article.color.background}`,
+                        'background-color': `${article.color}`,
                     }"
                 >
                     <router-link
@@ -37,7 +36,7 @@
                         <div
                             class="box"
                             :style="{
-                                'background-color': article.color.background,
+                                'background-color': article.color,
                             }"
                         ></div>
                     </router-link>
@@ -65,9 +64,7 @@ export default {
             console.log('toggleDrawer')
             this.isOpen = !this.isOpen
         },
-        close() {
-            this.isOpen = false
-        },
+
         closeDrawerTouch() {
             this.isOpen = false
         },
@@ -76,25 +73,26 @@ export default {
 </script>
 
 <style scoped>
-.drawer {
-    width: 250px;
+.drawerZ {
+    width: 100%;
     height: 100%;
     background: #333;
     color: white;
-    padding: 1em;
+    padding: 0;
     box-shadow: 2px 0 5px rgba(0, 0, 0, 0.5);
 }
 
-.drawer ul {
+.drawerZ ul {
     list-style: none;
     padding: 0;
+    width: 250px;
 }
 
-.drawer li {
-    margin: 1em 0;
+.drawerZ li {
+    margin: 0.2em 0;
 }
 
-.drawer a {
+.drawerZ a {
     color: white;
     text-decoration: none;
 }
@@ -110,6 +108,10 @@ a {
 
 .drawer-container {
     max-height: 100vh;
+    width: min-content;
+    position: fixed;
+    top: 0;
+    left: 0;
     overflow-y: scroll;
     -webkit-overflow-scrolling: touch;
 
@@ -136,7 +138,7 @@ ul {
 .link {
     position: relative;
     display: block;
-    width: calc(var(--nav-width) - 1rem);
+    width: calc(100% - 1rem);
     text-decoration: none;
     padding: 0 0.5rem;
     background-color: #ffffff44;

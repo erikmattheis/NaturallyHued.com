@@ -5,7 +5,7 @@ const fs = require('fs')
 const path = require('path')
 const { getArticlesByCollectionAndBatch } = require('./firestore')
 
-const batches = ['23.12.22', '23.12.26', '23.12.27']
+const batches = ['23.12.22', '23.12.26', '23.12.27', '23.11.28', '24.05.24']
 
 function executionTimeToSeconds(executionTime) {
     return Math.round((executionTime / 1000) * 100) / 100
@@ -30,7 +30,7 @@ async function run() {
         // eslint-disable-next-line no-await-in-loop
 
         const topics = await getArticlesByCollectionAndBatch(
-            'dyes',
+            'dyes-staging',
             batches
             // eslint-disable-next-line no-await-in-loop
         )

@@ -109,7 +109,7 @@ async function getArticlesByCollectionAndBatch(collection, batches) {
                 description: data.description,
                 content: data.content,
                 image: data.image,
-                topic: data.topic.replace(/ /g, '+'),
+                topic: data.topic?.replace(/ /g, '+'),
                 color: data.color,
                 grade: data.grade,
                 batch: data.batch,
