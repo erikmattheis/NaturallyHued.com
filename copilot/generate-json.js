@@ -20,7 +20,7 @@ async function run() {
     console.log('Generating JSON...')
     const t0 = performance.now()
     // const topic = body.topic || 'Synthetic fabrics used in sports';
-    const subjects = ['dyes']
+    const subjects = ['dyes-staging']
 
     // eslint-disable-next-line no-restricted-syntax
     for (const subject of subjects) {

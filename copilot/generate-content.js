@@ -1,19 +1,25 @@
 const { performance } = require('perf_hooks')
 const { sanitizeId } = require('./utility')
-const { saveArticle } = require('./firestore')
+const {
+    saveArticle,
+    saveArticles,
+    getArticlesByCollection,
+} = require('./firestore')
 const { generateGraphics } = require('./openai-images')
 const { generateText } = require('./openai-completions')
+const fs = require('fs')
 
 //const generateJson = require('./generate-json')
 const { dyes } = require('./data/dyes')
+const { fstat } = require('fs')
 
 // const dyes = JSON.parse(dyesJson);
 
 function getAGrade() {
     const grades = [
         "Write in the voice of a rural person who has never seen a compter and doesn't trust or understand science. But do NOT include misspellings, steretyoes and especially not scientifically inaccurate information.",
-        'Use flowery lavoicnguage, poetry, illiteration, pretentious foreign-language phrases, and a penchant for the absurd.',
-        'Write at tioa post-doct orate reading level.',
+        'Use flowery language, poetry, illiteration, pretentious foreign-language phrases, and a penchant for the absurd.',
+        'Write at a post-doctoral reading level.',
         'Make it nutty professor reading level.',
     ]
     return grades[Math.floor(Math.random() * grades.length)]
@@ -70,7 +76,7 @@ async function generateArticles() {
         const topics = dyes
 
         // only use first few topics for now
-        topics.length = 10
+        //topics.length = 10
 
         const colorThemes = [
             {
@@ -131,7 +137,7 @@ async function generateArticles() {
 
             // eslint-disable-next-line no-await-in-loop
             /*
-            const image = await generateGraphics(
+z            const image = await generateGraphics(
                 topic,
                 colorThemeDescription,
                 id
@@ -182,4 +188,92 @@ async function generateArticles() {
     }
 }
 
-module.exports = { generateArticles }
+// if a field exists in newArticles, update the old article with the new value
+
+async function updateArticles(newArticles, oldArticles) {
+    console.log('newArticles', newArticles.length)
+    console.log('oldArticles', oldArticles.length)
+    const articles = await Promise.all(
+        newArticles.map(async (newArticle) => {
+            const oldArticle = oldArticles.find(
+                (oldArticle) => newArticle.topic === oldArticle.topic
+            )
+            if (!oldArticle) {
+                console.log('no old article for', newArticle.topic)
+                return newArticle
+            }
+
+            const keys = Object.keys(oldArticle)
+
+            keys.forEach((key) => {
+                if (!newArticle[key] && oldArticle[key]) {
+                    console.log('no key, adding', oldArticle[key])
+                    newArticle[key] = oldArticle[key]
+                }
+            })
+
+            if (!newArticle.image) {
+                console.log('no image for', newArticle.topic)
+
+                try {
+                    newArticle.image = await generateGraphics(
+                        newArticle.topic,
+                        `${newArticle.input.colorTheme.colors.join(',')} and ${
+                            newArticle.color
+                        }`,
+                        newArticle.id
+                    )
+                    console.log('generated image for', newArticle.image)
+                } catch (error) {
+                    console.error(
+                        `Failed to generate graphics for article ${newArticle.id}:`,
+                        error
+                    )
+                }
+            }
+
+            newArticle.lastUpdated = new Date().toISOString()
+
+            console.log(newArticle.topic, 'updated', newArticle.image?.original)
+
+            return newArticle
+        })
+    )
+
+    return combineArticles(articles, oldArticles)
+}
+
+async function completeDevArticles() {
+    try {
+        const devArticles = await getArticlesByCollection('dyes-dev')
+        const oldArticles = await getArticlesByCollection('dyes')
+        const articles = await updateArticles(devArticles, oldArticles)
+        console.log('articles', articles.length)
+        await saveArticles('dyes-staging', articles)
+        console.log('articles', articles.length)
+        fs.writeFileSync('articles.json', JSON.stringify(articles, null, 2))
+        return articles
+    } catch (error) {
+        console.log('error', error)
+    }
+}
+
+function combineArticles(newArticles, oldArticles) {
+    const toMove = oldArticles.filter((oldArticle) => {
+        return !newArticles.find(
+            (newArticle) => newArticle.topic === oldArticle.topic
+        )
+    })
+    const articles = [...newArticles, ...toMove].sort((a, b) => {
+        if (!a.topic) {
+            return -1
+        }
+        if (!b.topic) {
+            return 1
+        }
+        return a.topic.localeCompare(b.topic)
+    })
+    return articles
+}
+
+module.exports = { generateArticles, completeDevArticles }

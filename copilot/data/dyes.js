@@ -1,5 +1,5 @@
 const dyes = [
-    { name: 'Alkanet', color: '#8B008B' },
+    /*  { name: 'Alkanet', color: '#8B008B' },
     { name: 'Annatto', color: '#FFD700' },
     { name: 'Avocado pits', color: '#568203' },
     { name: 'Beets', color: '#8E354A' },
@@ -58,8 +58,8 @@ const dyes = [
     { name: 'Osage Orange', color: '#FF4500' },
     { name: 'Orpiment', color: '#FFBF00' },
     { name: 'Paprika', color: '#FF4500' },
-    { name: 'Pecan Shells', color: '#966F33' },
-    { name: 'Pomegranate', color: '#FFD700' },
+    { name: 'Pecan Shells', color: '#966F33' },    */
+    { name: 'Pomegranates', color: '#FFD700' },
     { name: 'Purple Carrot', color: '#FF4500' },
     { name: 'Quebracho', color: '#E30022' },
     { name: 'Red Cabbage', color: '#8A2BE2' },

@@ -3,7 +3,7 @@ const path = require('path')
 const OpenAI = require('openai')
 const sharp = require('sharp')
 
-//const { saveImage } = require('./google-cloud')
+const { saveImage } = require('./google-cloud')
 
 const openai = new OpenAI({
     apiKey: process.env.OPENAI_API_KEY,
@@ -45,7 +45,9 @@ async function handler(
 
     const buffer = Buffer.from(image.b64_json, 'base64')
 
-    const name = `${imageStr}.jpg`
+    const str = imageStr.replace(/\s+/g, '-')
+
+    const name = `${str}.jpg`
 
     const original = await saveImage(buffer, name)
 
@@ -93,7 +95,7 @@ exports.generateGraphics = async function generateGraphics(
     colorThemeDescription = '',
     id = 'n2.jpg'
 ) {
-    const prompt = `Closeup realistic oil still life of ${topic.name} as a natural dye. ${colorThemeDescription} background colors.`
+    const prompt = `Closeup realistic oil still life of ${topic} as a natural dye. ${colorThemeDescription} background colors.`
 
     const model = 'dall-e-2'
     const size = '512x512'

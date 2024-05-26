@@ -42,6 +42,23 @@ async function saveArticle(collection, doc, id = null) {
     }
 }
 
+async function saveArticles(collection, docs) {
+    console.log('Saving to Firestore...', collection)
+    try {
+        const docRefs = docs.map((doc) => {
+            const docId = sanitizeId(`${doc.batch}-${doc.input.topic}`)
+            doc.id = docId
+            return db.collection(collection).doc(docId).set(doc)
+        })
+
+        await Promise.all(docRefs)
+
+        return 'Documents added successfully'
+    } catch (error) {
+        return `Error adding documents: ${error}`
+    }
+}
+
 async function updateArticle(collection, doc, id = null) {
     console.log('Updating Firestore...')
     try {
@@ -58,12 +75,13 @@ async function updateArticle(collection, doc, id = null) {
         await docRef.update({ ...doc, timestamp })
 
         const result = await docRef.get()
-        console.log('result', result.data())
+
         return result.data()
     } catch (error) {
         return `Error updating document: ${error}`
     }
 }
+
 async function getArticlesByCollection(name) {
     const articlesRef = db.collection(name) // .orderBy('topic', 'asc');
     const snapshot = await articlesRef.get()
@@ -75,7 +93,6 @@ async function getArticlesByCollection(name) {
     content: doc.data().content,
   }));
 */
-
     return articles
 }
 
@@ -94,10 +111,25 @@ async function getArticlesByCollectionAndBatch(collection, batches) {
                 image: data.image,
                 topic: data.topic.replace(/ /g, '+'),
                 color: data.color,
+                grade: data.grade,
+                batch: data.batch,
             }
         })
     console.log('articles found ', articles.length)
     return articles
+}
+
+async function deleteArticlesByCollectionAndBatch(collection, batch) {
+    const articlesRef = db.collection(collection)
+    const snapshot = await articlesRef.get()
+
+    const articlesToDelete = snapshot.docs.filter(
+        (doc) => doc.data().batch === batch
+    )
+
+    console.log('Articles to delete:', articlesToDelete.length)
+    const deletePromises = articlesToDelete.map((doc) => doc.ref.delete())
+    return Promise.all(deletePromises)
 }
 
 // select all but the document with the most recent timestamp for each topic
@@ -134,15 +166,16 @@ async function deleteOldArticles(collection) {
     return Promise.all(deletePromises)
 }
 
-async function moveArticlesToBackup(collection) {
-    console.log('Moving all docs to backup...')
+async function copyArticlesToBackup(collection) {
+    console.log('Copying all docs to backup...')
     const docRef = db.collection(collection)
     const snapshot = await docRef.get()
     const backupRef = db.collection('backup')
     let backupData = []
+    // should use same id
     snapshot.forEach((doc) => {
         const data = doc.data()
-        backupData.push(backupRef.doc().set(data))
+        backupData.push(backupRef.doc(doc.id).set(data))
     })
     return Promise.all(backupData)
 }
@@ -160,9 +193,10 @@ async function handler(request) {
 module.exports = {
     handler,
     saveArticle,
+    saveArticles,
     getArticlesByCollection,
     getArticlesByCollectionAndBatch,
-    moveArticlesToBackup,
+    copyArticlesToBackup,
     deleteOldArticles,
     getLatestArticles,
 }

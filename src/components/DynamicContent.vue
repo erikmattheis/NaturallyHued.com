@@ -49,13 +49,11 @@
 import axios from 'axios'
 import DOMPurify from 'dompurify'
 import dyes from '../data/dyes.json'
-import LoadingMessage from './LoadingMessage.vue'
 
 import { contrastingColor } from '../services/colors.js'
 
 export default {
     name: 'DynamicContent',
-    components: { LoadingMessage },
     props: {
         topic: {
             type: String,

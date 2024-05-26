@@ -1,6 +1,6 @@
 <template>
     <div class="dynamic" :style="{ 'background-image': backgroundImage }">
-        <div class="floating-button">
+        <div class="floating-button" style="z-index: 9999">
             <button @touchstart.passive="toggleDrawer" class="top-control">
                 <svg
                     aria-hidden="true"
@@ -25,7 +25,9 @@
                 <span class="sr-only">Menu</span>is:{{ isOpen }}
             </button>
         </div>
-        <TopicList v-if="isOpen" />
+        <transition name="drawer">
+            <TopicList v-if="isOpen" style="z-index: 9998" />
+        </transition>
         <div class="headline" v-if="!showHeadline">
             <h1>NATURALLY HUED</h1>
         </div>
@@ -86,3 +88,38 @@ export default {
     },
 }
 </script>
+
+<style scoped>
+.floating-button {
+    position: absolute;
+    top: 0.5rem;
+    left: 0;
+    width: var(--button-width);
+    height: var(--button-width);
+    padding: 0.31rem;
+    border-radius: 100rem;
+    background-color: var(--text-background-color);
+    color: var(--text-color);
+    z-index: 100;
+}
+
+button {
+    border: 0;
+    padding: 0;
+    margin: 0;
+    background-color: transparent;
+    cursor: pointer;
+}
+.drawer-enter-active,
+.drawer-leave-active {
+    transition: transform 0.3s ease;
+}
+
+.drawer-enter {
+    transform: translateX(-100%);
+}
+
+.drawer-leave-to {
+    transform: translateX(-100%);
+}
+</style>

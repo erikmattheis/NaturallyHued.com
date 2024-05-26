@@ -4,26 +4,34 @@ if (process.env.NODE_ENV !== 'production') {
     dotenv.config()
 }
 
-//const { run } = require('./copilot/generate-json')
-const { generateArticles } = require('./copilot/generate-content')
+const { run } = require('./copilot/generate-json')
+const {
+    generateArticles,
+    completeDevArticles,
+} = require('./copilot/generate-content')
 const {
     getLatestArticles,
-    moveArticlesToBackup,
+    copyArticlesToBackup,
     deleteOldArticles,
+    deleteArticlesByCollectionAndBatch,
+    renameIds,
 } = require('./copilot/firestore')
 
 async function make() {
-    const result = await generateArticles()
+    //const result = await generateArticles()
 
-    //const moved = await moveArticlesToBackup('dyes')
+    // const moved = await copyArticlesToBackup('dyes-dev')
     //console.log('moved', moved.length)
 
     //const latest = await getLatestArticles('dyes')
     //const latest = await deleteOldArticles('dyes')
     //console.log('latest', latest.length)
 
-    // await run()
+    await run()
 
+    // await renameIds('dyes', 'w1')
+    //const theArticles = await completeDevArticles()
+    //console.log('theArticles', theArticles.length)
     process.exit(0)
 }
 

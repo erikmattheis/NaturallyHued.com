@@ -1,11 +1,8 @@
 const { Storage } = require('@google-cloud/storage')
 
 // Load your service account credentials from an environment variable or secret manager
-console.log(
-    'process.env.GOOGLE_APPLICATION_CREDENTIALS',
-    process.env.GOOGLE_APPLICATION_CREDENTIALS
-)
-//const serviceAccount = JSON.parse(process.env.GOOGLE_APPLICATION_CREDENTIALS)
+
+const serviceAccount = JSON.parse(process.env.GOOGLE_APPLICATION_CREDENTIALS)
 
 function sanitizeId(id) {
     return encodeURIComponent(id.toLowerCase().replace(/\s/g, '-'))

@@ -1,54 +1,49 @@
 <template>
-    <div>
-        <transition name="drawer">
-            <div class="drawer-container" v-if="isOpen">
-                <div class="drawer">
-                    <button @click="close">Close</button>
-                    <ul>
-                        <li class="white-link">
-                            <router-link
-                                to="/"
-                                class="link right"
-                                @touchend="closeDrawerTouch"
-                                >Home
-                                <div class="black box"></div>
-                            </router-link>
-                        </li>
-                        <li>
-                            <router-link
-                                to="/about"
-                                class="link right"
-                                @touchend="closeDrawerTouch"
-                                >About
-                                <div class="black box"></div>
-                            </router-link>
-                        </li>
-                        <li
-                            v-for="article in topics"
-                            :key="article.shortTitle"
+    <div class="drawer-container">
+        <div class="drawer">
+            <button @click="close">Close</button>
+            <ul>
+                <li class="white-link">
+                    <router-link
+                        to="/"
+                        class="link right"
+                        @touchend="closeDrawerTouch"
+                        >Home
+                        <div class="black box"></div>
+                    </router-link>
+                </li>
+                <li>
+                    <router-link
+                        to="/about"
+                        class="link right"
+                        @touchend="closeDrawerTouch"
+                        >About
+                        <div class="black box"></div>
+                    </router-link>
+                </li>
+                <li
+                    v-for="article in topics"
+                    :key="article.shortTitle"
+                    :style="{
+                        'background-color': `${article.color.background}`,
+                    }"
+                >
+                    <router-link
+                        class="link"
+                        :to="`/dyes/${article.shortTitle}`"
+                        @touchend="closeDrawerTouch"
+                    >
+                        {{ article.shortTitle }}
+                        <div
+                            class="box"
                             :style="{
-                                'background-color': `${article.color.background}`,
+                                'background-color': article.color.background,
                             }"
-                        >
-                            <router-link
-                                class="link"
-                                :to="`/dyes/${article.shortTitle}`"
-                                @touchend="closeDrawerTouch"
-                            >
-                                {{ article.shortTitle }}
-                                <div
-                                    class="box"
-                                    :style="{
-                                        'background-color':
-                                            article.color.background,
-                                    }"
-                                ></div>
-                            </router-link>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </transition>
+                        ></div>
+                    </router-link>
+                </li>
+            </ul>
+        </div>
     </div>
 </template>
 
@@ -108,19 +103,6 @@ export default {
     text-decoration: underline;
 }
 
-.drawer-enter-active,
-.drawer-leave-active {
-    transition: transform 0.3s ease;
-}
-
-.drawer-enter {
-    transform: translateX(-100%);
-}
-
-.drawer-leave-to {
-    transform: translateX(-100%);
-}
-
 a {
     color: inherit;
     text-decoration: none;
@@ -137,26 +119,6 @@ a {
 
 .drawer-container::-webkit-scrollbar {
     display: initial;
-}
-
-.floating-button {
-    position: fixed;
-    top: 0.5rem;
-    left: 1rem;
-    width: var(--button-width);
-    height: var(--button-width);
-    padding: 0.31rem;
-    border-radius: 100rem;
-    background-color: var(--text-background-color);
-    color: var(--text-color);
-}
-
-button {
-    border: 0;
-    padding: 0;
-    margin: 0;
-    background-color: transparent;
-    cursor: pointer;
 }
 
 .drawer.expanded {
