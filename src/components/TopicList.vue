@@ -1,21 +1,23 @@
 <template>
     <div class="drawer-container">
-        <div class="drawer">
-            <ul class="drawer">
+        <div>
+            <ul class="drawerZ">
                 <li class="white-link">
                     <router-link
                         to="/"
                         class="link right"
-                        @touchend="closeDrawerTouch"
+                        @touchend.passive="closeDrawerTouch"
+                        @click="closeDrawerTouch"
                         >Home
                         <div class="black box"></div>
                     </router-link>
                 </li>
-                <li>
+                <li class="white-link">
                     <router-link
                         to="/about"
                         class="link right"
-                        @touchend="closeDrawerTouch"
+                        @touchend.passive="closeDrawerTouch"
+                        @click="closeDrawerTouch"
                         >About
                         <div class="black box"></div>
                     </router-link>
@@ -30,7 +32,8 @@
                     <router-link
                         class="link"
                         :to="`/dyes/${article.shortTitle}`"
-                        @touchend="closeDrawerTouch"
+                        @touchend.passive="closeDrawerTouch"
+                        @click="closeDrawerTouch"
                     >
                         {{ article.shortTitle }}
                         <div
@@ -61,7 +64,6 @@ export default {
     },
     methods: {
         toggleDrawer() {
-            console.log('toggleDrawer')
             this.isOpen = !this.isOpen
         },
 

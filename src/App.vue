@@ -2,7 +2,7 @@
     <div class="dynamic" :style="{ 'background-image': backgroundImage }">
         <div class="floating-button" style="z-index: 9999">
             <button
-                @touchstart.passive="toggleDrawer"
+                @touchend.prevent="toggleDrawer"
                 @click="toggleDrawer"
                 class="top-control"
             >
@@ -30,7 +30,7 @@
             </button>
         </div>
         <transition name="drawer">
-            <TopicList v-if="isOpen" style="z-index: 9998" />
+            <TopicList v-if="isOpen" isOpen="isOpen" style="z-index: 9998" />
         </transition>
         <div class="headline" v-if="!showHeadline">
             <h1>NATURALLY HUED</h1>
@@ -95,9 +95,9 @@ export default {
 
 <style scoped>
 .floating-button {
-    position: absolute;
+    position: fixed;
     top: 0.5rem;
-    left: 0;
+    left: 0.5rem;
     width: var(--button-width);
     height: var(--button-width);
     padding: 0.31rem;
