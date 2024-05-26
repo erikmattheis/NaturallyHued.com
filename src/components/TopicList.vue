@@ -1,51 +1,40 @@
 <template>
     <div class="drawer-container">
-        <div>
-            <ul class="drawerZ">
-                <li class="white-link">
-                    <router-link
-                        to="/"
-                        class="link right"
-                        @touchend.passive="closeDrawerTouch"
-                        @click="closeDrawerTouch"
-                        >Home
-                        <div class="black box"></div>
-                    </router-link>
-                </li>
-                <li class="white-link">
-                    <router-link
-                        to="/about"
-                        class="link right"
-                        @touchend.passive="closeDrawerTouch"
-                        @click="closeDrawerTouch"
-                        >About
-                        <div class="black box"></div>
-                    </router-link>
-                </li>
-                <li
-                    v-for="article in topics"
-                    :key="article.shortTitle"
-                    :style="{
-                        'background-color': `${article.color}`,
-                    }"
+        <ul class="drawerZ">
+            <li class="white-link">
+                <router-link to="/" class="link right" @click="linkClicked"
+                    >Home
+                    <div class="black box"></div>
+                </router-link>
+            </li>
+            <li class="white-link">
+                <router-link to="/about" class="link right" @click="linkClicked"
+                    >About
+                    <div class="black box"></div>
+                </router-link>
+            </li>
+            <li
+                v-for="article in topics"
+                :key="article.shortTitle"
+                :style="{
+                    'background-color': `${article.color}`,
+                }"
+            >
+                <router-link
+                    class="link"
+                    :to="`/dyes/${article.shortTitle}`"
+                    @click="linkClicked"
                 >
-                    <router-link
-                        class="link"
-                        :to="`/dyes/${article.shortTitle}`"
-                        @touchend.passive="closeDrawerTouch"
-                        @click="closeDrawerTouch"
-                    >
-                        {{ article.shortTitle }}
-                        <div
-                            class="box"
-                            :style="{
-                                'background-color': article.color,
-                            }"
-                        ></div>
-                    </router-link>
-                </li>
-            </ul>
-        </div>
+                    {{ article.shortTitle }}
+                    <div
+                        class="box"
+                        :style="{
+                            'background-color': article.color,
+                        }"
+                    ></div>
+                </router-link>
+            </li>
+        </ul>
     </div>
 </template>
 
@@ -63,6 +52,9 @@ export default {
         color: Object,
     },
     methods: {
+        linkClicked() {
+            this.$emit('linkClicked')
+        },
         toggleDrawer() {
             this.isOpen = !this.isOpen
         },
@@ -99,7 +91,7 @@ export default {
     text-decoration: none;
 }
 
-.drawer a:hover {
+.drawerZ a:hover {
     text-decoration: underline;
 }
 

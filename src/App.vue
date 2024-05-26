@@ -3,7 +3,7 @@
         <div class="floating-button" style="z-index: 9999">
             <button
                 @touchend.prevent="toggleDrawer"
-                @click="toggleDrawer"
+                @mouseup="toggleDrawer"
                 class="top-control"
             >
                 <svg
@@ -30,7 +30,12 @@
             </button>
         </div>
         <transition name="drawer">
-            <TopicList v-if="isOpen" isOpen="isOpen" style="z-index: 9998" />
+            <TopicList
+                v-if="isOpen"
+                isOpen="isOpen"
+                style="z-index: 9998"
+                @linkClicked="toggleDrawer"
+            />
         </transition>
         <div class="headline" v-if="!showHeadline">
             <h1>NATURALLY HUED</h1>
@@ -71,6 +76,12 @@ export default {
     mounted() {
         this.isLoading = false
     },
+    watch: {
+        $route() {
+            this.isOpen = false
+        },
+    },
+
     methods: {
         toggleDrawer() {
             this.isOpen = !this.isOpen

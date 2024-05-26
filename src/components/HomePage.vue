@@ -54,68 +54,57 @@
                         heritage passed down through generations. From the
                         ancient Indus Valley civilization to the modern-day
                         fashion runways, natural dyes have been a part of our
-                        lives for centuries. Explore the cultural significance
-                        and historical roots of traditional colorants sourced
-                        from plants, minerals, and time-honored techniques.
+                        lives for centuries. Imagine Cleopatra herself donning
+                        garments dyed with precious colors sourced from plants
+                        and minerals! Explore the cultural significance and
+                        historical roots of traditional colorants sourced from
+                        nature and crafted using time-honored techniques.
                         Uncover the secrets of craftsmanship that have stood the
                         test of time, creating fabrics that resonate with
-                        cultural stories.
+                        cultural stories and vibrant histories.
                     </p>
-
-                    <h3>Cultural Diversity in Hues</h3>
                     <p>
-                        Discover the kaleidoscope of colors that different
-                        cultures have embraced throughout history. From the
-                        indigos of Asia to the vibrant cochineals of South
-                        America, delve into the unique palettes that reflect the
-                        diverse traditions and practices of societies across the
-                        globe.
+                        <strong>Cultural Diversity in Hues:</strong> Discover
+                        the kaleidoscope of colors that different cultures have
+                        embraced throughout history. From the rich indigos of
+                        Asia to the vibrant cochineals of South America, delve
+                        into the unique palettes that reflect the diverse
+                        traditions and practices of societies across the globe.
+                        Ever wondered how a particular shade of red could tell a
+                        story of an entire civilization? Well, prepare to be
+                        amazed!
                     </p>
-                    <!--                    <h3>Craftsmanship Unveiled</h3>
                     <p>
-                        Unearth the secrets behind traditional craftsmanship,
-                        where skilled artisans transform raw materials into
-                        works of art. Our in-depth articles and features explore
-                        the nuances of dyeing and weaving traditions, offering a
-                        glimpse into the meticulous processes that elevate
-                        textiles to cultural treasures.
+                        <strong
+                            >Human Creativity Merged With Artificial
+                            Intelligence:</strong
+                        >
+                        Experience the fusion of human and artificial
+                        intelligence as we bring you cutting-edge insights,
+                        trends, and narratives in the realm of sustainable
+                        fabrics, dyes, and clothing. Our project isn't just
+                        about colors and fabrics; it's a testament to the
+                        limitless possibilities when creativity collaborates
+                        with technology. Picture this: a symphony of tradition
+                        and innovation, where age-old dyeing techniques meet the
+                        future of fashion, creating a masterpiece that’s both
+                        timeless and revolutionary.
                     </p>
-
-                    <h3>Preserving Heritage through Fabric</h3>
                     <p>
-                        At Naturally Hued, we cherish the role of natural dyes
-                        and fabrics in preserving cultural heritage. Learn how
-                        these traditional elements continue to play a vital role
-                        in connecting the past with the present, fostering a
-                        sense of identity and pride.
-                    </p>
-
-                    <h3>Join the Cultural Odyssey</h3>
-                    <p>
-                        Immerse yourself in the cultural odyssey of natural dyes
-                        and fabrics. Whether you're a history enthusiast, a
-                        textile lover, or a cultural explorer, our platform
-                        invites you to embark on a journey where tradition and
-                        creativity converge.
+                        Join us on this vibrant journey through time, where each
+                        hue tells a story, and each fabric piece is a canvas of
+                        cultural expression. It’s not just a look back at
+                        history; it’s an exciting glimpse into the future of
+                        sustainable fashion.
                     </p>
 
                     <h3>Start Your Exploration</h3>
                     <p>
                         Begin your exploration into the traditions and cultures
-                        woven into natural dyes and fabrics.
-                    </p>
-                -->
-                    <h3>
-                        Human Creativity Merged With Artificial Intelligence
-                    </h3>
-                    <p>
-                        Experience the fusion of human and artificial
-                        intelligence as we bring you cutting-edge insights,
-                        trends, and narratives in the realm of sustainable
-                        fabrics, dyes and clothing. Our project isn't just about
-                        colors and fabrics; it's a testament to the limitless
-                        possibilities when creativity collaborates with
-                        technology.
+                        woven into natural dyes and fabrics. Choose a topic from
+                        the drawer on there left to dive into the world of
+                        natural hues. Or start with
+                        <a href @click.prevent="randomRoute">our suggestion</a>.
                     </p>
                 </div>
             </div>
@@ -124,6 +113,7 @@
 </template>
 
 <script>
+import dyes from '../data/dyes.json'
 export default {
     name: 'HomePage',
     data() {
@@ -184,6 +174,32 @@ export default {
                 'https://storage.googleapis.com/nightly-images/article-images/23.12.22-cherries-2023-11-5-3-59-3-q80.jpg'
             ogImage.getElementsByTagName('head')[0].appendChild(meta)
         }
+    },
+    methods: {
+        randomRoute() {
+            // get list of all routes, filter out all that aren't in /dyes/
+            const routes = this.$router.options.routes.filter((route) =>
+                route.path.includes('/dyes/')
+            )
+            console.log(routes)
+            // get a random dye from the list
+            const randomDye = dyes[Math.floor(Math.random() * dyes.length)]
+
+            // find the route that matches the random dye
+            const randomRoute = routes.find(
+                (route) => route.path === `/dyes/${randomDye.shortTitle}`
+            )
+
+            // check if randomRoute is defined before trying to access its path property
+            if (randomRoute) {
+                console.log(randomRoute.path)
+
+                // navigate to the random route
+                this.$router.push(randomRoute.path)
+            } else {
+                console.log(`No route found for dye: ${randomDye.shortTitle}`)
+            }
+        },
     },
 }
 </script>
