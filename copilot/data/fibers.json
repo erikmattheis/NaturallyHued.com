@@ -1,0 +1,140 @@
+{
+  "fibers": [
+    {
+      "name": "Cotton",
+      "color": "#FFFFFF"
+    },
+    {
+      "name": "Hemp",
+      "color": "#C2A16A"
+    },
+    {
+      "name": "Flax (Linen)",
+      "color": "#EAE8E0"
+    },
+    {
+      "name": "Nettle",
+      "color": "#D0D38F"
+    },
+    {
+      "name": "Bamboo",
+      "color": "#9CBF84"
+    },
+    {
+      "name": "Milkweed",
+      "color": "#BDDFB3"
+    },
+    {
+      "name": "Alpaca",
+      "color": "#8B5742"
+    },
+    {
+      "name": "Bison",
+      "color": "#734A2A"
+    },
+    {
+      "name": "Musk Ox (Qiviut)",
+      "color": "#D2C2B0"
+    },
+    {
+      "name": "Yucca",
+      "color": "#B9AA83"
+    },
+    {
+      "name": "Llama",
+      "color": "#AA8B66"
+    },
+    {
+      "name": "Vicuña",
+      "color": "#C2A16A"
+    },
+    {
+      "name": "Pima Cotton",
+      "color": "#F0EDE5"
+    },
+    {
+      "name": "Coconut Coir",
+      "color": "#E1B780"
+    },
+    {
+      "name": "Pandanus",
+      "color": "#9E935F"
+    },
+    {
+      "name": "Raffia",
+      "color": "#D4B68E"
+    },
+    {
+      "name": "Abaca",
+      "color": "#BDA37A"
+    },
+    {
+      "name": "Jute",
+      "color": "#D5B292"
+    },
+    {
+      "name": "Ramie",
+      "color": "#E1CBA9"
+    },
+    {
+      "name": "Banana Fiber",
+      "color": "#D9C987"
+    },
+    {
+      "name": "Nalolo Bark Cloth",
+      "color": "#DAC6AF"
+    },
+    {
+      "name": "Lotus Fiber",
+      "color": "#E8E4DD"
+    },
+    {
+      "name": "Camel",
+      "color": "#C2A16A"
+    },
+    {
+      "name": "Goat (Cashmere)",
+      "color": "#C2A16A"
+    },
+    {
+      "name": "Sheep (Wool)",
+      "color": "#F0EDE5"
+    },
+    {
+      "name": "Date Palm",
+      "color": "#C2A16A"
+    },
+    {
+      "name": "Silk",
+      "color": "#F7F7F7"
+    },
+    {
+      "name": "Angora",
+      "color": "#F2E8E2"
+    },
+    {
+      "name": "Cashmere",
+      "color": "#F3E5D8"
+    },
+    {
+      "name": "Mohair",
+      "color": "#EFE8E1"
+    },
+    {
+      "name": "New Zealand Flax (Harakeke)",
+      "color": "#D5B292"
+    },
+    {
+      "name": "Tapa Cloth",
+      "color": "#DAC6AF"
+    },
+    {
+      "name": "Pineapple (Piña)",
+      "color": "#E1CBA9"
+    },
+    {
+      "name": "Kapok",
+      "color": "#F7F7F7"
+    }
+  ]
+}
