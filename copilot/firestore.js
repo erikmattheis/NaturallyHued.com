@@ -115,6 +115,7 @@ async function getArticlesByCollectionAndBatch(collection, batches) {
                 batch: data.batch,
             }
         })
+
     console.log('articles found ', articles.length)
     return articles
 }
@@ -190,7 +191,36 @@ async function handler(request) {
     }
 }
 
+// update article images
+
+async function updateArticleImages(newArticles, images) {
+    const articlesRef = db.collection('articles')
+    const snapshot = await articlesRef.get()
+    const articles = snapshot.docs.map((doc) => doc.data())
+
+    // only update image and lastUpdated fields
+    const updatedArticles = articles.map((article) => {
+        const image = images.find((image) => image.topic === article.topic)
+        if (image) {
+            article.image = image
+            article.lastUpdated = admin.firestore.Timestamp.now()
+        }
+        return article
+    })
+
+    // update articles
+    const updatePromises = updatedArticles.map((article) => {
+        const docId = sanitizeId(`${article.batch}-${article.topic}`)
+        const docRef = db.collection('articles').doc(docId)
+        return docRef.update(article)
+    })
+
+    return Promise.all(updatePromises)
+}
+
 module.exports = {
+    updateArticleImages,
+
     handler,
     saveArticle,
     saveArticles,

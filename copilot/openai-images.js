@@ -45,6 +45,8 @@ async function handler(
 
     const buffer = Buffer.from(image.b64_json, 'base64')
 
+    const jpgBuffer = sharp(buffer).jpeg(100).withMetadata({})
+
     const str = imageStr.replace(/\s+/g, '-')
 
     const name = `${str}.jpg`
@@ -52,7 +54,10 @@ async function handler(
     const original = await saveImage(buffer, name)
 
     const quality = 80
-    const compressedBuffer = await sharp(buffer).jpeg({ quality }).toBuffer()
+    const compressedBuffer = await sharp(buffer)
+        .withMetadata({})
+        .jpeg({ quality })
+        .toBuffer()
 
     const compressedFilename = name.replace('.jpg', `-q${quality}.jpg`)
 
@@ -91,7 +96,7 @@ const imageNameWithDash = replaceWhiteSpaceWithDash(imageName);
 exports.handler = handler
 
 exports.generateGraphics = async function generateGraphics(
-    topic = '',
+    topic = 'bright ink',
     colorThemeDescription = '',
     id = 'n2.jpg'
 ) {

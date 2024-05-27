@@ -104,9 +104,9 @@
       "original": "https://storage.googleapis.com/nightly-images/article-images/23.12.22-alkanet-2023-11-5-3-16-6.jpg",
       "size": "512x512",
       "model": "dall-e-2",
-      "compressed": "https://storage.googleapis.com/nightly-images/article-images/23.12.22-alkanet-2023-11-5-3-16-6-q80.jpg",
       "prompt": "Closeup still life in style of ALBERT BIERSTADT of Alkanet as a natural dye. #D10067 background colors.",
-      "colorThemeDescription": "#D10067"
+      "colorThemeDescription": "#D10067",
+      "compressed": "https://storage.googleapis.com/nightly-images/article-images/23.12.22-alkanet-2023-11-5-1-50-33-q80.jpg"
     },
     "topic": "Alkanet",
     "color": "#8B008B",

@@ -1,4 +1,5 @@
 const dotenv = require('dotenv')
+const fs = require('fs')
 
 if (process.env.NODE_ENV !== 'production') {
     dotenv.config()
@@ -30,7 +31,9 @@ async function make() {
     await run()
 
     // await renameIds('dyes', 'w1')
-    //const theArticles = await completeDevArticles()
+    const theArticles = await completeDevArticles()
+
+    fs.writeFileSync('./articles.json', JSON.stringify(theArticles, null, 2))
     //console.log('theArticles', theArticles.length)
     process.exit(0)
 }

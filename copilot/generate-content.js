@@ -243,6 +243,46 @@ async function updateArticles(newArticles, oldArticles) {
     return combineArticles(articles, oldArticles)
 }
 
+async function addMissingImages(newArticles) {
+    const toUpdate = newArticles.filter((newArticle) => {
+        return !newArticle.image
+    })
+    const articles = await Promise.all(
+        toUpdate.map(async (newArticle) => {
+            if (!newArticle.image) {
+                console.log('no image for', newArticle.shortTitle)
+                const colorTheme = newArticle.input.colorTheme
+                const colorThemeDescription =
+                    colorTheme.colors.length > 1
+                        ? `${colorTheme.colors[0]} and ${colorTheme.colors[1]}`
+                        : colorTheme.colors[0]
+                try {
+                    newArticle.image = await generateGraphics(
+                        newArticle.shortTitle,
+                        colorThemeDescription,
+                        newArticle.id
+                    )
+                    newArticle.lastUpdated = new Date().toISOString()
+                    console.log('generated image for', newArticle.image)
+                } catch (error) {
+                    console.error(
+                        `Failed to generate graphics for article ${newArticle.id}:`,
+                        error
+                    )
+                }
+            }
+
+            console.log(newArticle.topic, 'updated', newArticle.image?.original)
+
+            return newArticle
+        })
+    )
+
+    // but we only want to update the image and last updated fields
+
+    return articles
+}
+
 async function completeDevArticles() {
     try {
         const devArticles = await getArticlesByCollection('dyes-dev')
