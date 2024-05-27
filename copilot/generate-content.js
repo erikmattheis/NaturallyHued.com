@@ -222,6 +222,9 @@ async function updateArticles(newArticles, oldArticles) {
                         newArticle.id
                     )
                     console.log('generated image for', newArticle.image)
+                    // pause 12 seconds for rate limit
+                    await new Promise((resolve) => setTimeout(resolve, 12000))
+
                     newArticle.lastUpdated = new Date().toISOString()
                 } catch (error) {
                     console.error(
@@ -282,7 +285,7 @@ async function addMissingImages(newArticles) {
 
 async function completeDevArticles() {
     try {
-        const devArticles = await getArticlesByCollection('dyes-dev')
+        const devArticles = await getArticlesByCollection('dyes-staging')
         const oldArticles = await getArticlesByCollection('dyes')
         const articles = await updateArticles(devArticles, oldArticles)
         console.log('articles', articles.length)

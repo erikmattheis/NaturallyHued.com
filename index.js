@@ -28,7 +28,7 @@ async function make() {
     //const latest = await deleteOldArticles('dyes')
     //console.log('latest', latest.length)
 
-    //await run()
+    await run()
 
     // await renameIds('dyes', 'w1')
     const theArticles = await completeDevArticles()
