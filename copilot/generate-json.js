@@ -3,7 +3,10 @@
 const { performance } = require('perf_hooks')
 const fs = require('fs')
 const path = require('path')
-const { getArticlesByCollectionAndBatch } = require('./firestore')
+const {
+    getArticlesByCollectionAndBatch,
+    getArticlesByCollection,
+} = require('./firestore')
 
 const batches = ['23.12.22', '23.12.26', '23.12.27', '23.11.28', '24.05.24']
 
@@ -20,7 +23,7 @@ async function run() {
     console.log('Generating JSON...')
     const t0 = performance.now()
     // const topic = body.topic || 'Synthetic fabrics used in sports';
-    const subjects = ['dyes-staging']
+    const subjects = ['dyes']
 
     // eslint-disable-next-line no-restricted-syntax
     for (const subject of subjects) {
@@ -29,16 +32,12 @@ async function run() {
         // const topics = await getArticlesByBatch(subject);
         // eslint-disable-next-line no-await-in-loop
 
-        const topics = await getArticlesByCollectionAndBatch(
-            'dyes-staging',
-            batches
-            // eslint-disable-next-line no-await-in-loop
-        )
+        const topics = await getArticlesByCollection(subject)
 
         const fileName = replaceWhiteSpaceWithDash(collection)
 
         fs.writeFileSync(
-            path.join(__dirname, `../src/data/${fileName}.json`),
+            path.join(__dirname, `../src/data/dyes.json`),
             JSON.stringify(topics, null, 2)
         )
     }

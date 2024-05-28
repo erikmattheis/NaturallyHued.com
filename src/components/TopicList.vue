@@ -24,6 +24,9 @@
                     class="link"
                     :to="`/dyes/${article.shortTitle}`"
                     @click="linkClicked"
+                    :style="{
+                        color: getContrastColor(article.color),
+                    }"
                 >
                     {{ article.shortTitle }}
                     <div
@@ -62,6 +65,22 @@ export default {
         closeDrawerTouch() {
             this.isOpen = false
         },
+        getContrastColor(bgColor) {
+            if (!bgColor) return '#000000' // Default to black if no color provided
+
+            // Convert hex color to RGB
+            let color =
+                bgColor.charAt(0) === '#' ? bgColor.substring(1, 7) : bgColor
+            let r = parseInt(color.substring(0, 2), 16) // Red
+            let g = parseInt(color.substring(2, 4), 16) // Green
+            let b = parseInt(color.substring(4, 6), 16) // Blue
+
+            // Calculate the brightness of the color
+            let brightness = (r * 299 + g * 587 + b * 114) / 1000
+
+            // Return white for dark colors, black for light colors
+            return brightness > 155 ? '#000000' : '#FFFFFF'
+        },
     },
 }
 </script>
@@ -86,20 +105,6 @@ export default {
     margin: 0.2em 0;
 }
 
-.drawerZ a {
-    color: white;
-    text-decoration: none;
-}
-
-.drawerZ a:hover {
-    text-decoration: underline;
-}
-
-a {
-    color: inherit;
-    text-decoration: none;
-}
-
 .drawer-container {
     max-height: 100vh;
     width: min-content;
@@ -108,7 +113,6 @@ a {
     left: 0;
     overflow-y: scroll;
     -webkit-overflow-scrolling: touch;
-
     scrollbar-width: thin;
     -ms-overflow-style: auto;
 }
@@ -148,7 +152,7 @@ ul {
 
 .link:hover {
     background-color: #ffffff99;
-    color: #fff;
+    color: #ddd;
 }
 
 .white-link {

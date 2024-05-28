@@ -96,6 +96,37 @@ async function getArticlesByCollection(name) {
     return articles
 }
 
+function findDifferences(obj1, obj2, currentPath = '') {
+    let paths = []
+    for (let key in obj2) {
+        let newPath = currentPath ? `${currentPath}.${key}` : key
+        if (!Object.prototype.hasOwnProperty.call(obj1, key) || !obj1[key]) {
+            paths.push(newPath)
+        } else if (typeof obj2[key] === 'object' && !Array.isArray(obj2[key])) {
+            paths = paths.concat(findDifferences(obj1[key], obj2[key], newPath))
+        }
+    }
+    return paths
+}
+
+async function compare(c1, c2) {
+    const articlesRef = db.collection(c1)
+
+    const snapshot = await articlesRef.get()
+    const articles = snapshot.docs.map((doc) => doc.data())
+
+    const articlesRef2 = db.collection(c2)
+    const snapshot2 = await articlesRef2.get()
+    const articles2 = snapshot2.docs.map((doc) => doc.data())
+    console.log(
+        'Comparing collections of length:',
+        articles.length,
+        articles2.length
+    )
+    const diffs = findDifferences(articles, articles2)
+    console.log('Differences:', diffs)
+}
+
 async function getArticlesByCollectionAndBatch(collection, batches) {
     const articlesRef = db.collection(collection) // .orderBy('topic', 'asc');
     const snapshot = await articlesRef.get()
@@ -229,4 +260,5 @@ module.exports = {
     copyArticlesToBackup,
     deleteOldArticles,
     getLatestArticles,
+    compare,
 }

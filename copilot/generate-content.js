@@ -5,6 +5,7 @@ const {
     saveArticles,
     getArticlesByCollection,
 } = require('./firestore')
+const admin = require('firebase-admin')
 const { generateGraphics } = require('./openai-images')
 const { generateText } = require('./openai-completions')
 const fs = require('fs')
@@ -68,32 +69,43 @@ function addDateSuffix(str) {
     return `${str}-${year}-${month}-${day}-${hours}-${minutes}-${seconds}`
 }
 
+function getColorTheme(color) {
+    const colorThemes = [
+        {
+            name: 'Indochine and complimentary',
+            colors: ['#CF6B00', '#4F3C28'],
+        },
+        { name: 'Indochine', colors: ['#CF6B00'] },
+        {
+            name: 'Razzmatazz and complementary',
+            colors: ['#D10067', '#52293D'],
+        },
+        { name: 'Razzmatazz', colors: ['#D10067'] },
+        {
+            name: 'Ultramarine and complementary',
+            colors: ['#3F00FF', '#FFC700'],
+        },
+    ]
+
+    const colorTheme =
+        colorThemes[Math.floor(Math.random() * colorThemes.length)]
+
+    const colorThemeDescription =
+        colorTheme.colors.length > 1
+            ? `${colorTheme.colors[0]} and ${colorTheme.colors[1]}`
+            : colorTheme.colors[0] // eslint-disable-line max-len
+
+    return { colorTheme, colorThemeDescription }
+}
 // eslint-disable-next-line func-names
 async function generateArticles() {
     try {
-        const batch = '24.05.24'
+        const batch = '24.05.27'
 
         const topics = dyes
 
         // only use first few topics for now
         //topics.length = 10
-
-        const colorThemes = [
-            {
-                name: 'Indochine and complimentary',
-                colors: ['#CF6B00', '#4F3C28'],
-            },
-            { name: 'Indochine', colors: ['#CF6B00'] },
-            {
-                name: 'Razzmatazz and complementary',
-                colors: ['#D10067', '#52293D'],
-            },
-            { name: 'Razzmatazz', colors: ['#D10067'] },
-            {
-                name: 'Ultramarine and complementary',
-                colors: ['#3F00FF', '#FFC700'],
-            },
-        ]
 
         for (const topic of topics) {
             if (
@@ -124,16 +136,7 @@ async function generateArticles() {
             const name = topic.name.toLowerCase()
 
             const id = sanitizeId(`${batch}-${name}`)
-
-            const colorTheme =
-                colorThemes[Math.floor(Math.random() * colorThemes.length)]
-
-            console.log(`Generating article for ${topic.name}...`)
-
-            const colorThemeDescription =
-                colorTheme.colors.length > 1
-                    ? `${colorTheme.colors[0]} and ${colorTheme.colors[1]}`
-                    : colorTheme.colors[0] // eslint-disable-line max-len
+            const colorTheme = getColorTheme(topic.color)
 
             // eslint-disable-next-line no-await-in-loop
             /*
@@ -190,95 +193,20 @@ z            const image = await generateGraphics(
 
 // if a field exists in newArticles, update the old article with the new value
 
-async function updateArticles(newArticles, oldArticles) {
-    console.log('newArticles', newArticles.length)
-    console.log('oldArticles', oldArticles.length)
-    const articles = await Promise.all(
-        newArticles.map(async (newArticle) => {
-            const oldArticle = oldArticles.find(
-                (oldArticle) => newArticle.topic === oldArticle.topic
-            )
-            if (oldArticle) {
-                const keys = Object.keys(oldArticle)
+async function updateArticles(collectionName) {
+    const articles = await getArticlesByCollection(collectionName)
 
-                keys.forEach((key) => {
-                    if (!newArticle[key] && oldArticle[key]) {
-                        console.log('no key, adding', oldArticle[key])
-                        newArticle[key] = oldArticle[key]
-                        newArticle.lastUpdated = new Date().toISOString()
-                    }
-                })
+    for (const article of articles) {
+        if (!article.input.colorTheme) {
+            article.input.colorTheme = getColorTheme(article.color)
+            if (!article.lastUpdated) {
+                article.lastUpdated = admin.firestore.Timestamp.now()
             }
+        }
+        console.log(article.input.topic, 'updated', article.image?.original)
+    }
 
-            if (!newArticle.image) {
-                console.log('no image for', newArticle.topic)
-
-                try {
-                    newArticle.image = await generateGraphics(
-                        newArticle.topic,
-                        `${newArticle.input.colorTheme.colors.join(',')} and ${
-                            newArticle.color
-                        }`,
-                        newArticle.id
-                    )
-                    console.log('generated image for', newArticle.image)
-                    // pause 12 seconds for rate limit
-                    await new Promise((resolve) => setTimeout(resolve, 12000))
-
-                    newArticle.lastUpdated = new Date().toISOString()
-                } catch (error) {
-                    console.error(
-                        `Failed to generate graphics for article ${newArticle.id}:`,
-                        error
-                    )
-                }
-            }
-
-            console.log(newArticle.topic, 'updated', newArticle.image?.original)
-
-            return newArticle
-        })
-    )
-
-    return combineArticles(articles, oldArticles)
-}
-
-async function addMissingImages(newArticles) {
-    const toUpdate = newArticles.filter((newArticle) => {
-        return !newArticle.image
-    })
-    const articles = await Promise.all(
-        toUpdate.map(async (newArticle) => {
-            if (!newArticle.image) {
-                console.log('no image for', newArticle.shortTitle)
-                const colorTheme = newArticle.input.colorTheme
-                const colorThemeDescription =
-                    colorTheme.colors.length > 1
-                        ? `${colorTheme.colors[0]} and ${colorTheme.colors[1]}`
-                        : colorTheme.colors[0]
-                try {
-                    newArticle.image = await generateGraphics(
-                        newArticle.shortTitle,
-                        colorThemeDescription,
-                        newArticle.id
-                    )
-                    newArticle.lastUpdated = new Date().toISOString()
-                    console.log('generated image for', newArticle.image)
-                } catch (error) {
-                    console.error(
-                        `Failed to generate graphics for article ${newArticle.id}:`,
-                        error
-                    )
-                }
-            }
-
-            console.log(newArticle.topic, 'updated', newArticle.image?.original)
-
-            return newArticle
-        })
-    )
-
-    // but we only want to update the image and last updated fields
+    await saveArticles(collectionName, articles)
 
     return articles
 }
@@ -316,4 +244,4 @@ function combineArticles(newArticles, oldArticles) {
     return articles
 }
 
-module.exports = { generateArticles, completeDevArticles }
+module.exports = { generateArticles, completeDevArticles, updateArticles }
